@@ -4,12 +4,6 @@
 
 `cyber-doc-env` is a Docker image based on the latest Kali Linux rolling distribution, tailored for cyber security testing and experimentation. This image is equipped with various tools and custom scripts, making it ideal for security researchers and enthusiasts.
 
-## Author
-
-- **Martin Patino**
-- Contact: [martin.patino@example.com](mailto:martin.patino@example.com)
-- GitHub: [thisguymartin](https://github.com/thisguymartin)
-
 ## Features
 
 - Built on `kalilinux/kali-rolling:latest`
