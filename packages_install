@@ -1,0 +1,77 @@
+#!/bin/bash
+
+WHT_CONFIGURATIONS="${WHT}/configurations"
+
+export DEBIAN_FRONTEND=noninteractive
+
+echo -e " + up(date|grade)"
+
+apt-get update && \
+apt-get upgrade -qq -y
+
+echo -e " + install essentials"
+
+apt-get install -y -qq --no-install-recommends \
+	tar \
+	git \
+	curl \
+	wget \
+	tree \
+	unzip \
+	xauth \
+	libxss1 \
+	apt-utils \
+	p7zip-full \
+	ca-certificates \
+	build-essential
+
+
+# Define a function to install Go packages
+install_go_package() {
+    go install "$1"
+}
+
+# GitHub Repositories
+git clone https://github.com/zsh-users/zsh-autosuggestions.git
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git
+git clone https://github.com/tmux-plugins/tpm.git
+git clone https://github.com/preservim/nerdtree.git
+git clone https://github.com/ryanoasis/vim-devicons.git
+git clone https://github.com/vim-airline/vim-airline.git
+git clone https://github.com/airblade/vim-gitgutter.git
+git clone https://github.com/Xuyuanp/nerdtree-git-plugin.git
+git clone https://github.com/tpope/vim-fugitive.git
+git clone https://github.com/vortexau/dnsvalidator.git
+git clone https://github.com/enenumxela/Interlace.git
+git clone https://github.com/hueristiq/lists.git
+
+# Go Packages
+install_go_package "github.com/OWASP/Amass/v3/...@latest"
+install_go_package "github.com/tomnomnom/anew@latest"
+install_go_package "github.com/enenumxela/cdncheck/cmd/cdncheck@latest"
+install_go_package "github.com/glebarez/cero@latest"
+install_go_package "github.com/dwisiswant0/crlfuzz/cmd/crlfuzz@latest"
+install_go_package "github.com/cgboal/sonarsearch/cmd/crobat@latest"
+install_go_package "github.com/hahwul/dalfox/v2@latest"
+install_go_package "github.com/projectdiscovery/dnsx/cmd/dnsx@latest"
+install_go_package "github.com/ffuf/ffuf@latest"
+install_go_package "github.com/sensepost/gowitness@latest"
+install_go_package "github.com/Josue87/gotator@latest"
+install_go_package "github.com/hakluke/hakrevdns@latest"
+install_go_package "github.com/hueristiq/hqcrawl3r/cmd/hqcrawl3r@latest"
+install_go_package "github.com/hueristiq/hqnotifi3r/cmd/hqnotifi3r@latest"
+install_go_package "github.com/hueristiq/hqsubfind3r/cmd/hqsubfind3r@latest"
+install_go_package "github.com/hueristiq/hqs3scann3r/cmd/hqs3scann3r@latest"
+install_go_package "github.com/hueristiq/hqurl/cmd/hqurl@latest"
+install_go_package "github.com/hueristiq/hqurlfind3r/cmd/hqurlfind3r@latest"
+install_go_package "github.com/hueristiq/hqurlscann3r/cmd/hqurlscann3r@latest"
+install_go_package "github.com/projectdiscovery/httpx/cmd/httpx@latest"
+install_go_package "github.com/projectdiscovery/mapcidr/cmd/mapcidr@latest"
+install_go_package "github.com/projectdiscovery/naabu/cmd/naabu@latest"
+install_go_package "github.com/projectdiscovery/nuclei/v2/cmd/nuclei@latest"
+install_go_package "github.com/d3mondev/puredns/v2@latest"
+install_go_package "github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest"
+install_go_package "github.com/rverton/webanalyze/cmd/webanalyze@latest"
+install_go_package "github.com/asciimoo/wuzz@latest"
+
+echo "Installation complete."

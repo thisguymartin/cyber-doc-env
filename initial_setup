@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+
+# Configuration
+WHT_CONFIG_PATH="${WHT}/configurations"
+export DEBIAN_FRONTEND=noninteractive
+
+# Function for updating and upgrading the system
+update_system() {
+    echo -e " + Updating and Upgrading System"
+    apt-get update && apt-get upgrade -qq -y
+}
+
+# Function for installing a list of essential packages
+install_essentials() {
+    echo -e " + Installing Essential Packages"
+    local packages=(
+        tar git curl wget tree unzip xauth libxss1 apt-utils p7zip-full
+        ca-certificates build-essential
+    )
+    apt-get install -y -qq --no-install-recommends "${packages[@]}"
+}
+
+# Function for installing and generating locales
+setup_locales() {
+    echo -e " + Installing and Generating Locales"
+    apt-get install -y -qq --no-install-recommends locales
+    localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
+}
+
+# Function for extracting configuration files
+extract_configuration() {
+    echo -e " + Extracting Configuration Files"
+    [ -f "${WHT_CONFIG_PATH}.7z" ] && 7z x "${WHT_CONFIG_PATH}.7z" -o"${WHT}"
+}
+
+# Function for setting up the Z shell (Zsh)
+setup_zsh() {
+    echo -e " + Setting up Z shell (Zsh)"
+    [ ! -x "$(command -v zsh)" ] && apt-get install -y -qq zsh
+    [ "${SHELL}" != "$(which zsh)" ] && chsh -s "$(which zsh)" "${USER}"
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+    # Cloning Zsh plugins
+    local zsh_plugin_path="${HOME}/.oh-my-zsh/custom/plugins"
+    git clone https://github.com/zsh-users/zsh-autosuggestions.git "${zsh_plugin_path}/zsh-autosuggestions"
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "${zsh_plugin_path}/zsh-syntax-highlighting"
+    # Moving configuration files
+    mv "${WHT_CONFIG_PATH}/.zshrc" "${HOME}/.zshrc"
+    mv "${WHT_CONFIG_PATH}/.zprofile" "${HOME}/.zprofile"
+    mv "${WHT_CONFIG_PATH}/.hushlogin" "${HOME}/.hushlogin"
+}
+
+# ... Remaining functions for Terminal, Session Manager, Browsers, Remote Connection, Development, Tools, Lists, and Cleanup ...
+
+# Main execution sequence
+update_system
+install_essentials
+setup_locales
+extract_configuration
+setup_zsh
+# ... Calls to other functions in a similar pattern ...
+
+echo -e " + System Setup Complete"

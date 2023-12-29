@@ -2,13 +2,14 @@
 FROM kalilinux/kali-rolling:latest
 
 # Set label with author information
-LABEL org.heuristiq.image.authors="Alex Munene (enenumxela)"
+LABEL maintainer="Martin Patino"
+LABEL org.heuristiq.image.authors="Martin Patino (thisguymartin)"
 
 # Define arguments and environment variables
 ARG HOME=/root
 ARG TOOLS=${HOME}/TOOLS
 ARG LOCALBIN=${HOME}/.local/bin
-ARG WHT=/etc/web-hacking-toolkit
+ARG WHT=/etc/cyber-doc-env
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -20,6 +21,7 @@ ENV WHT=${WHT} \
 # Update and upgrade the system, and create necessary directories
 RUN apt-get update && \
     apt-get upgrade -qq -y && \
+    apt-get install -y git golang && \
     if [ ! -d ${WHT} ]; \
     then \
         mkdir -p ${WHT}; \
@@ -33,21 +35,20 @@ RUN apt-get update && \
         mkdir -p ${LOCALBIN}; \
     fi
 
-# Copy compressed files containing scripts and configurations into the image
-COPY scripts.7z ${WHT}/scripts.7z
-COPY configurations.7z ${WHT}/configurations.7z
+# Copy files to the container and set permissions 
+COPY packages_install ${WHT}/packages_install
+COPY initial_setup ${WHT}/initial_setup
 
-# Install p7zip-full, extract scripts, run setup, and move scripts to user bin
-RUN apt-get install -y -qq --no-install-recommends p7zip-full && \
-    7z x ${WHT}/scripts.7z -o/tmp && \
-    for script in $(find /tmp/scripts -maxdepth 1 -type f -name "*-setup*" -print | sort); \
-    do \
-        echo ${script}; \
-        chmod +x ${script}; \
-        ${script}; \
-    done && \
-    chmod +x /tmp/scripts/* && \
-    mv -f /tmp/scripts/* ${LOCALBIN}
+# Copy scripts to the container and set permissions
+RUN chmod +x ${WHT}/packages_install
+RUN chmod +x ${WHT}/initial_setup
+
+
+RUN ./${WHT}/packages_install
+RUN ./${WHT}/initial_setup
 
 # Set the working directory
 WORKDIR $HOME
+
+# Optional: Set a default command, e.g., starting a shell
+CMD ["/bin/bash"] 
