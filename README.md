@@ -1,4 +1,4 @@
-# cyber-doc-env Docker Image
+# cyber-doc-env docker image
 
 ## Overview
 
