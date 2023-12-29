@@ -1,0 +1,33 @@
+# Git Stuff
+
+.git
+.gitignore
+
+# Github Stuff
+
+.github
+
+# Docker stuff
+
+.dockerignore
+
+# Uncompressed (configurations & scripts)
+
+configurations
+scripts
+
+# Data
+
+data
+
+# License
+
+LICENSE
+
+# Notes
+
+notes.txt
+
+# Readme
+
+README.md
